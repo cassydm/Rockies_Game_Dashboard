@@ -6,11 +6,11 @@ Code and Dashboard created by Cassy Miller
 <img src = "https://cdn-icons-png.flaticon.com/512/25/25231.png" alt = "gitlogo" width = 20> [GitHub](https://github.com/cassydm) 
 <img src = "https://images.icon-icons.com/2428/PNG/512/linkedin_black_logo_icon_147114.png" alt = "linkedinlogo" width = 20> [Linkedin](https://www.linkedin.com/in/cassydm/)
 
-## [>>> Click to view Dashboard](https://cassydm.github.io/Rockies_Game_Dashboard/Rockies-Dash-Final.html)  
+## [>>> Click to view Dashboard](https://cassydm.github.io/Rockies_Game_Dashboard/index.html)  
 
 The R code for the dashboard can be found in "Rockies Final Report.rmd".  The HTML page is hosted through github.
 
-**[View dashboard here](https://cassydm.github.io/Rockies_Game_Dashboard/Rockies-Dash-Final.html)**  
+**[View dashboard here](https://cassydm.github.io/Rockies_Game_Dashboard/index.html)**  
 
 ## About  
 
@@ -18,7 +18,7 @@ This goal of this project was to create a dashboard for the Colorado Rockies ana
 
 Data was scraped from [Baseball Reference](https://www.baseball-reference.com/).  
 
-## [Dashboard](https://cassydm.github.io/Rockies_Game_Dashboard/Rockies-Dash-Final.html) Overview  
+## [Dashboard](https://cassydm.github.io/Rockies_Game_Dashboard/index.html) Overview  
 
 > This game details various statistics from the Colorado Rockies v Toronto Blue Jays game played 5/31/2019.  
 
