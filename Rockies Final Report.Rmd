@@ -1,0 +1,516 @@
+---
+title: "Rockies Final Project"
+author: "Cassy Miller"
+date: "5/27/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r knitr-options, include = FALSE}
+knitr::opts_chunk$set(fig.align="center",
+                      warning = FALSE,
+                      message = FALSE,
+                      comment = NA)
+```
+
+Toronto Blue Jays at Colorado Rockies, May 31, 2019
+```{r, include = FALSE}
+library(tidyverse)
+library(ggcorrplot)
+library(baseballr)
+library(lubridate)
+library(mgcv)
+library(gganimate)
+library(writexl)
+library(rvest)
+theme_set(theme_classic())
+
+```
+
+Looking at the Rockies Batters For the 19' Season
+```{r,include=FALSE}
+R_Tapia_id <- playerid_lookup(last_name = "Tapia", first_name = "Raimel")%>%
+  dplyr::pull(.,mlbam_id)
+R_Tapia <- scrape_statcast_savant(start_date = ymd("2019-03-28"), 
+                                       end_date = ymd("2019-09-29"), 
+                                       playerid = R_Tapia_id)
+T_Story_id <- playerid_lookup(last_name = "Story", first_name = "Trevor")%>%
+  dplyr::pull(.,mlbam_id)
+T_Story <- scrape_statcast_savant(start_date = ymd("2019-03-28"), 
+                                       end_date = ymd("2019-09-29"), 
+                                       playerid = T_Story_id)
+D_Dahl_id <- playerid_lookup(last_name = "Dahl", first_name = "David")%>%
+  dplyr::pull(.,mlbam_id)
+D_Dahl <- scrape_statcast_savant(start_date = ymd("2019-03-28"), 
+                                       end_date = ymd("2019-09-29"), 
+                                       playerid = D_Dahl_id)
+B_Rodgers_id <- playerid_lookup(last_name = "Rodgers", first_name = "Brendan")%>%
+  dplyr::pull(.,mlbam_id)
+B_Rodgers <- scrape_statcast_savant(start_date = ymd("2019-03-28"), 
+                                       end_date = ymd("2019-09-29"), 
+                                       playerid = B_Rodgers_id)
+D_Murphy_id <- playerid_lookup(last_name = "Murphy", first_name = "Daniel")
+D_Murphy <- scrape_statcast_savant(start_date = ymd("2019-03-28"), 
+                                       end_date = ymd("2019-09-29"), 
+                                       playerid = "502517")
+R_Mcmahon_id <- playerid_lookup(last_name = "Mcmahon", first_name = "Ryan")
+R_Mcmahon <- scrape_statcast_savant(start_date = ymd("2019-03-28"), 
+                                       end_date = ymd("2019-09-29"), 
+                                       playerid = "641857")
+I_Desmond_id <- playerid_lookup(last_name = "Desmond", first_name = "Ian")%>%
+  dplyr::pull(.,mlbam_id)
+I_Desmond <- scrape_statcast_savant(start_date = ymd("2019-03-28"), 
+                                       end_date = ymd("2019-09-29"), 
+                                       playerid = I_Desmond_id)
+T_Wolters_id <- playerid_lookup(last_name = "Wolters", first_name = "Tony")%>%
+  dplyr::pull(.,mlbam_id)
+T_Wolters <- scrape_statcast_savant(start_date = ymd("2019-03-28"), 
+                                       end_date = ymd("2019-09-29"), 
+                                       playerid = T_Wolters_id)
+J_Tinoco_id <- playerid_lookup(last_name = "Tinoco", first_name = "Jesus")%>%
+  dplyr::pull(.,mlbam_id)
+J_Tinoco <- scrape_statcast_savant(start_date = ymd("2019-03-28"), 
+                                       end_date = ymd("2019-09-29"), 
+                                       playerid = J_Tinoco_id)
+N_Arenado_id <- playerid_lookup(last_name = "Arenado", first_name = "Nolan")%>%
+  dplyr::pull(.,mlbam_id)
+N_Arenado <- scrape_statcast_savant(start_date = ymd("2019-03-28"), 
+                                       end_date = ymd("2019-09-29"), 
+                                       playerid = N_Arenado_id)
+M_Reynolds_id <- playerid_lookup(last_name = "Reynolds", first_name = "Mark")
+M_Reynolds <- scrape_statcast_savant(start_date = ymd("2019-03-28"), 
+                                       end_date = ymd("2019-09-29"), 
+                                       playerid = "448602")
+C_Iannetta_id <- playerid_lookup(last_name = "Iannetta", first_name = "Chris")%>%
+  dplyr::pull(.,mlbam_id)
+C_Iannetta <- scrape_statcast_savant(start_date = ymd("2019-03-28"), 
+                                       end_date = ymd("2019-09-29"), 
+                                       playerid = C_Iannetta_id)
+
+```
+```{r, include=FALSE}
+write_xlsx(R_Tapia,"C:\\Users\\Cassy\\Desktop\\1.xlsx")
+write_xlsx(T_Story,"C:\\Users\\Cassy\\Desktop\\2.xlsx")
+write_xlsx(D_Dahl,"C:\\Users\\Cassy\\Desktop\\3.xlsx")
+write_xlsx(B_Rodgers,"C:\\Users\\Cassy\\Desktop\\4.xlsx")
+write_xlsx(D_Murphy,"C:\\Users\\Cassy\\Desktop\\5.xlsx")
+write_xlsx(R_Mcmahon,"C:\\Users\\Cassy\\Desktop\\6.xlsx")
+write_xlsx(I_Desmond,"C:\\Users\\Cassy\\Desktop\\7.xlsx")
+write_xlsx(T_Wolters,"C:\\Users\\Cassy\\Desktop\\8.xlsx")
+write_xlsx(J_Tinoco,"C:\\Users\\Cassy\\Desktop\\9.xlsx")
+write_xlsx(N_Arenado,"C:\\Users\\Cassy\\Desktop\\10.xlsx")
+write_xlsx(M_Reynolds,"C:\\Users\\Cassy\\Desktop\\11.xlsx")
+write_xlsx(C_Iannetta,"C:\\Users\\Cassy\\Desktop\\12.xlsx")
+```
+
+
+```{r}
+massive_df <- read.csv("~/DU/Junior Year/Spring 2020/Sports Amalytics/Rockies Project/massive_data.csv")
+
+```
+```{r}
+plots <- massive_df %>% 
+  mutate(., hc_yy = (-1*hc_y)) %>%
+  mutate(., out_v = if_else(events == c("single", "home_run", "double", "triple"), "on_base", "out"))
+plots31 <- plots %>%
+  filter(., game_date == "2019-05-31")
+
+```
+```{r}
+events <- tbl_df(unique(massive_df$events)) 
+events
+type <- tbl_df(unique(massive_df$type))
+type
+```
+Looking at Player's 2019 spraycharts
+```{r}
+p1 <- ggspraychart(data= plots, point_alpha =.5, x_value = "hc_x", y_value = "hc_yy")+ 
+  
+  theme(legend.position = "none",plot.title = element_text(hjust =.5, size=15, face = "bold", color = "#33006F")) +
+  transition_manual(player_name) +labs(title= "{current_frame}'s 2019 hits") 
+
+animate(p1, fps = 5)
+
+
+```
+Looking at Player's spraycharts for May 31, 2019
+```{r}
+p2 <- ggspraychart(data= plots31, point_alpha =.5, x_value = "hc_x", y_value = "hc_yy") +
+  theme(legend.position = "none",plot.title = element_text(hjust =.5, size=15, face = "bold", color = "#33006F")) +
+  transition_manual(player_name) +labs(title= "{current_frame}'s hits for May 31, 2019 V TOR") 
+
+animate(p2, fps = 5)
+
+```
+
+```{r, include=FALSE}
+top_zone <- 3.5
+bot_zone <- 1.6
+left_zone <- -0.75
+right_zone <- 0.75
+strike_zone_df <- data.frame(
+  x = c(left_zone, left_zone, right_zone, right_zone, left_zone),
+  y = c(bot_zone, top_zone, top_zone, bot_zone, bot_zone)
+)
+```
+## Batter's Box for 2019 Season
+
+```{r}
+swing_set <- plots %>% 
+  mutate(swing = if_else(description%in%
+                        c("ball","blocked_ball","automatic_ball", "called_strike", "hit_by_pitch"), 0 , 1))
+
+p3 <- ggplot(swing_set,  
+             aes(x = plate_x, y = plate_z, col = as.factor(swing))) + geom_point(alpha = 0.2)  + scale_color_brewer("swing", palette = "Set1") +
+  geom_path(data = strike_zone_df, aes(x, y), lwd = 1, color = "black") + 
+  xlim(-3.5, 3.5) + 
+  coord_fixed() + transition_manual(player_name) +labs(title =  "{current_frame}'s batter box for 2019 season", x= "horizontal location", y = "vertical location") +theme(plot.title = element_text(hjust =.5, size=15, face = "bold", color = "#33006F"))
+animate(p3, fps =2)
+```
+
+
+```{r}
+swing_set31 <- swing_set %>%
+  filter(.,game_date=="2019-05-31")
+p4 <- ggplot(swing_set31,  
+             aes(x = plate_x, y = plate_z, col = as.factor(swing))) + geom_point(alpha = 0.15)  + scale_color_brewer("swing", palette = "Set1") +
+  geom_path(data = strike_zone_df, aes(x, y), color = "black") + 
+  xlim(-3.5, 3.5) + 
+  coord_fixed() + transition_manual(player_name) +labs(title =  "{current_frame}'s batter box for May 31, 2019 v TOR", x= "horizontal location", y = "vertical location")  +theme(plot.title = element_text(hjust =.5, size=15, face = "bold", color = "#33006F"))
+animate(p4, fps =2)
+
+```
+```{r}
+
+p5 <- ggplot(data =swing_set31, 
+             aes(x = plate_x, y = plate_z, col = as.factor(swing), text = paste('Pitch:',swing_set31$pitch_type, '\n', 'Outcome:',events,",",swing_set31$description,'\n'))) +  geom_point(alpha = 0.15) +
+  facet_wrap(~player_name, ncol=4)+ scale_color_brewer("swing", palette = "Set1")  
+plotly::ggplotly(p5, tooltip="text") 
+```
+```{r}
+swing_set31_1<- swing_set31 %>%
+  filter(swing=="1")
+p5 <- ggplot(data = swing_set31_1,
+             aes(x = plate_x, y= plate_z, col=player_name, text = paste(player_name, '\n', 'Pitch: ', pitch_type, "\n", "Outcome: ", events, ",", description))) + scale_color_brewer("player_name",palette="Set3")+
+  geom_point(alpha=.5) + labs(title = "Swings during May 31, 2019 v TOR", x="Horizontal Location", y= "Vertical location") +theme(plot.title = element_text(hjust =.5, size=15, face = "bold", color = "#33006F")) + coord_fixed()
+
+plotly::ggplotly(p5, tooltip = "text")
+```
+
+
++ geom_path(data = strike_zone_df, aes(x, y), lwd = 1, color = "black") + 
+  xlim(-3.5, 3.5) 
+  coord_fixed()
+  
+Faced Pitches by player
+```{r}
+faced_pit31 <- massive_df %>% 
+  filter(!pitch_type == "null") %>% filter( game_date== "2019-05-31") 
+
+p6 <- ggplot(data= faced_pit31, aes(x=pitch_type))
+p6 + geom_bar(aes(fill=player_name)) +labs(title = "Pitches the Rockies Batters Faced May 31, 2019 v TOR", x= "Pitch Type", y= "Count") + scale_fill_brewer(palette = "Set3") +theme(plot.title = element_text(hjust =.5, size=15, face = "bold", color = "#33006F")) 
+  
+
+```
+
+
+
+Faced pitches by pitcher
+
+```{r}
+p7 <- ggplot(data= faced_pit31, aes(x=pitch_type))
+p7 + geom_bar(fill="#33006F") +labs(title = "Pitches the Rockies Batters Faced May 31, 2019 v TOR by pitcher", x= "Pitch Type", y= "Count")  +theme(plot.title = element_text(hjust =.5, size=15, face = "bold", color = "#33006F")) +facet_grid("pitcher...8")
+```
+Comparing hit distance and launch angle
+```{r}
+hits <- plots %>%
+  filter(., type == "X") %>%
+  mutate(may31 = if_else(game_date=="2019-05-31", "May 31, 2019", "'19 Season"))
+
+p8 <- ggplot(data = hits,
+            aes(x = launch_angle, y = hit_distance_sc, 
+                text=paste('Player: ', player_name,'\n', 'Pitch Type: ', pitch_type, '\n', events))) +
+  geom_point(color = "#33006F",alpha = .15) +
+  labs(title = "Hit Distance v Launch Angle", description="Comparing 2019 season to May 31, 2019 v TOR", x = "Launch Angle", y= "Hit Distance") +facet_wrap("may31") +theme(plot.title = element_text(hjust =.5, size=15, face = "bold", color = "#33006F"))
+
+plotly::ggplotly(p8, tooltip = "text")
+```
+Comparing Launch Speed and Hit Distance
+```{r}
+p9 <- ggplot(data = hits,
+            aes(x = launch_speed, y = hit_distance_sc, 
+                text=paste('Player: ', player_name,'\n', 'Pitch Type: ', pitch_type, '\n', events))) +
+  geom_point(color = "#33006F",alpha = .15) +
+  labs(title = "Hit Distance v Launch Speed", description="Comparing 2019 season to May 31, 2019 v TOR", x = "Launch Speed", y= "Hit Distance") +facet_wrap("may31") +theme(plot.title = element_text(hjust =.5, size=15, face = "bold", color = "#33006F"))
+
+plotly::ggplotly(p9, tooltip = "text")
+```
+
+
++ transition_manual(player_name)
+gganimate::animate(p8, fps=3)
+
+Player's Stat Charts 
+```{r}
+url_base <- "https://www.baseball-reference.com/boxes/COL/COL201905310.shtml"
+
+
+#statcharts <- xml2::read_html(url) %>%
+ # rvest::html_nodes(xpath= '//*[(@id = "ColoradoRockiesbatting")]') %>%
+  #rvest::html_table()
+
+```
+  links <- xml2::read_html(url) %>%
+  rvest::html_nodes(xpath = '//*[(@id = "roster")]//a') %>%
+  rvest::html_attr('href')
+links
+
+Looking at the batter's box scores
+```{r}
+url_base <- "http://gd2.mlb.com/components/game/mlb/"
+ url <- paste0(url_base, 
+   "year_2019/month_05/day_31/gid_2019_05_31_milmlb_nynmlb_1/boxscore.xml")
+ batter_boxscore(url)
+
+```
+
+
+```{r}
+df1 <-get_game_pks_mlb("2019-05-31",level_ids = c(1)) %>%
+  filter(teams.home.team.name == "Colorado Rockies")
+df1
+
+
+```
+```{r}
+order_COL <- get_batting_orders(game_pk = df1$game_pk, type = "starting") %>%
+  filter(team=="home") %>%
+  select("id", "fullName", "abbreviation", "batting_order")
+order_TOR <- get_batting_orders(game_pk = df1$game_pk, type = "starting") %>%
+  filter(team=="away") %>%
+  select("id", "fullName", "abbreviation", "batting_order")
+```
+Colorado's Batters
+```{r}
+print(order_COL)
+```
+
+Toronto's Batters
+```{r}
+print(order_TOR)
+```
+Game Info
+```{r}
+game31 <- get_game_info_mlb(game_pk = df1$game_pk)
+print(game31)
+```
+pbp
+```{r}
+pbp<-get_pbp_mlb(game_pk = df1$game_pk)
+pbp
+```
+
+## Batters Box score
+```{r}
+url_base <- "http://gd2.mlb.com/components/game/mlb/"
+url <- paste0(url_base, 
+  "year_2019/month_05/day_31/gid_2019_05_31_tormlb_colmlb_1/boxscore.xml")
+batbox <- batter_boxscore(url)
+batbox
+```
+## Charting The Data
+```{r}
+onb <- batbox %>%
+  select(name_display_first_last, obp, rbi, avg ) %>% mutate(t = if_else(batbox$team == "21", "TOR", "COL"))
+onb
+
+onbplot <- ggplot(onb,
+                  aes(x= obp, y= avg, col=t, text = 
+                        paste('Player:', name_display_first_last, '\nOn Base Percent:', obp, '\nBatting Average:', avg, '\nRuns Batted In:', rbi ))) +  
+  geom_point() +
+  scale_color_brewer(palette = "Set1") + labs(title = "Comparing OBP to AVG", x= "On Base Percentage (obp)", y= "Batting Average (avg)")  + theme(plot.title = element_text(hjust =.5, size=15, face = "bold", color = "#33006F"))
+
+plotly::ggplotly(onbplot, tooltip = "text")
+```
+
+
+
+Pitchers
+```{r}
+pitbox <- pitcher_boxscore(url) %>% select(!"game_score")
+pitbox
+```
+
+## Analyzing COL Pitching 
+
+```{r}
+Marquez_id <- playerid_lookup(last_name = "Marquez", first_name = "German")%>%
+  dplyr::pull(.,mlbam_id)
+Marquez <- scrape_statcast_savant_pitcher(start_date = ymd("2019-03-28"), 
+                                       end_date = ymd("2019-09-29"), 
+                                       pitcherid = Marquez_id)
+
+```
+## Marquez's pitches by Type
+```{r}
+pitches <- ggplot(data= Marquez, 
+                  aes(x= pitch_name)) +
+  geom_bar(fill="#33006F") + labs(title="German Marquez's pitches for 2019 season", x= "Pitch Type", y= "Count") +
+  theme(plot.title = element_text(hjust =.5, size=15, face = "bold", color = "#33006F"))
+pitches
+```
+
+```{r}
+Marquez31 <- Marquez %>%
+  filter(.,game_date == "2019-05-31")
+pitches2 <- ggplot(data= Marquez31, 
+                  aes(x= pitch_name)) +
+  geom_bar(fill="#33006F") + labs(title="German Marquez's pitches game May 31,2019 v TOR", x= "Pitch Type", y= "Count") +
+  theme(plot.title = element_text(hjust =.5, size=15, face = "bold", color = "#33006F"))
+pitches2
+
+```
+
+## Release Speed by Pitch Type
+
+```{r}
+rs_pitch <- Marquez %>%
+filter(type == "X") %>%
+ggplot(aes(x = pitch_type, y = release_speed, fill = pitch_name)) + 
+  geom_violin(alpha = 0.5, color = "black") +
+scale_fill_brewer("type", palette = "BuPu") +
+labs(title = "German Marquez's Release Speed by Pitch Type in 2019",
+x = "Pitch Type",
+y = "Release Speed")  +
+  theme(plot.title = element_text(hjust =.5, size=15, face = "bold", color = "#33006F")) + 
+  theme(legend.position = "none")+ 
+coord_flip()
+rs_pitch
+
+```
+
+```{r}
+rs_pitch2 <- Marquez31 %>%
+filter(type == "X") %>%
+ggplot(aes(x = pitch_type, y = release_speed, fill = pitch_name)) + 
+  geom_violin(alpha = 0.5, color = "black") +
+scale_fill_brewer("type", palette = "BuPu") +
+labs(title = "German Marquez's Release Speed by Pitch Type \nMay 31, 2019 v TOR",
+x = "Pitch Type",
+y = "Release Speed")  + 
+  theme(plot.title = element_text(hjust =.5, size=15, face = "bold", color = "#33006F"))+ 
+  theme(legend.position = "none")+ 
+coord_flip()
+rs_pitch2
+```
+
+## Pitching Accuracy
+
+```{r}
+acc <- ggplot(Marquez,  
+             aes(x = plate_x, y = plate_z, col = type )) + geom_point(alpha = 0.4)  + scale_color_brewer("type", palette = "Set1")  + 
+  
+  geom_path(data = strike_zone_df, aes(x, y), lwd = 1, color = "black") + 
+  xlim(-3.5, 3.5) +
+  coord_fixed() + transition_manual(pitch_name) +labs(title =  " Marquez's {current_frame} pitches in 2019", x= "horizontal location", y = "vertical location") +theme(plot.title = element_text(hjust =.5, size=15, face = "bold", color = "#33006F"))
+animate(acc, fps =5)
+```
+
+```{r}
+acc31 <- ggplot(Marquez31,  
+             aes(x = plate_x, y = plate_z, col = type )) + geom_point(alpha = 0.4)  + scale_color_brewer("type", palette = "Set1")  + 
+  
+  geom_path(data = strike_zone_df, aes(x, y), lwd = 1, color = "black") + 
+  xlim(-3.5, 3.5) +
+  coord_fixed() + transition_manual(pitch_name) +labs(title =  " Marquez's {current_frame} pitches on \nMay 31, 2019 v TOR", x= "horizontal location", y = "vertical location") +theme(plot.title = element_text(hjust =.5, size=15, face = "bold", color = "#33006F"))
+animate(acc31, fps =5)
+```
+
+## Speed of Pitches
+
+```{r}
+url_base <- "http://gd2.mlb.com/components/game/mlb/"
+url <- paste0(url_base, 
+  "year_2019/month_05/day_31/gid_2019_05_31_tormlb_colmlb_1/boxscore.xml")
+pitbox <- pitcher_boxscore(url) %>% select(.,!one_of("game_score"))
+pitbox
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##########################
+```{r Tapia31}
+R_Tapia_bat31 <- R_Tapia_bat %>% filter(., game_date=="2019-05-31")
+p1 <- ggplot(R_Tapia_bat31, 
+             aes(x = plate_x, y = plate_z, col = as.factor(swing)))
+p1 + geom_point() +
+  scale_color_brewer("swing", palette = "Set1") +
+  geom_path(data = strike_zone_df, aes(x, y), lwd = 1, color = "black") +
+  labs(title = "R. Tapia's Hits for game May 31, 2019 vs. TOR
+       ",
+       x = "horizontal location (ft)",
+       y = "vertical location (ft)") +
+  xlim(-3.5, 3.5) +
+  coord_fixed()
+
+
+```
+
+```{r}
+R_Tapia_bat31 <- R_Tapia_bat31 %>% 
+  mutate(., hc_yy = (-1*hc_y))
+ggspraychart(data= R_Tapia_bat31, point_alpha =.5, x_value = "hc_x", y_value = "hc_yy", fill_value = "events", fill_palette = c("field_out"="red","force_out"="red","single"="#33006F", "double"="#33006F", "triple"="#33006F", "home_run"="#33006F") ) +
+  ggtitle("\nR. Tapia Hits May 31, 2019 vs TOR") + theme(legend.position = "none",plot.title = element_text(hjust =.5, size=15, face = "bold"))
+```
+```{r}
+
+
+```
+Tapia's Hits
+```{r}
+R_Tapia_bat <- R_Tapia_bat %>% 
+  mutate(., hc_yy = (-1*hc_y))
+ggspraychart(data= R_Tapia_bat, point_alpha =.5, x_value = "hc_x", y_value = "hc_yy") +
+  ggtitle("\nR. Tapia Hits 2019") + theme(legend.position = "none",plot.title = element_text(hjust =.5, size=15, face = "bold"))
+```
+
+```{r}
+R_Tapia_bat <- R_Tapia_bat %>% 
+  mutate(., hc_yy = (-1*hc_y))
+ggspraychart(data= R_Tapia_bat, point_alpha =.5, x_value = "hc_x", y_value = "hc_yy", fill_value = "events", fill_palette = c("field_out"="red","force_out"="red","single"="#33006F", "double"="#33006F", "triple"="#33006F", "home_run"="#33006F", "strikeout" ="red", "field_error"="red", "walk"="white", "strikeout_double_play" = "green", "grounded_into_double_play"="#33006f", "null"="yellow") ) +
+  ggtitle("\nR. Tapia Hits 2019") + theme(legend.position = "none",plot.title = element_text(hjust =.5, size=15, face = "bold"))
+```
+
+```{r}
+
+p2 <- ggplot(data =R_Tapia_bat31, aes(x= pitch_type))
+
+p2 + geom_bar() +labs(title = "Pitches R. Tapia say May 31, 2019") + geom_bar(data=R_Tapia_bat, aes(x=pitch_type))
+```
