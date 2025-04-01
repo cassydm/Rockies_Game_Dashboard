@@ -6,7 +6,7 @@ Code and Dashboard created by Cassy Miller
 <img src = "https://cdn-icons-png.flaticon.com/512/25/25231.png" alt = "gitlogo" width = 20> [GitHub](https://github.com/cassydm) 
 <img src = "https://images.icon-icons.com/2428/PNG/512/linkedin_black_logo_icon_147114.png" alt = "linkedinlogo" width = 20> [Linkedin](https://www.linkedin.com/in/cassydm/)
 
-## [Dashboard](https://cassydm.github.io/Rockies_Game_Dashboard/Rockies-Dash-Final.html)  
+## [>>> Click to view Dashboard](https://cassydm.github.io/Rockies_Game_Dashboard/Rockies-Dash-Final.html)  
 
 The R code for the dashboard can be found in "Rockies Final Report.rmd".  
 
