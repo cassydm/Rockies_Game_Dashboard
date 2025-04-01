@@ -8,7 +8,7 @@ Code and Dashboard created by Cassy Miller
 
 ## [>>> Click to view Dashboard](https://cassydm.github.io/Rockies_Game_Dashboard/Rockies-Dash-Final.html)  
 
-The R code for the dashboard can be found in "Rockies Final Report.rmd".  
+The R code for the dashboard can be found in "Rockies Final Report.rmd".  The HTML page is hosted through github.
 
 **[View dashboard here](https://cassydm.github.io/Rockies_Game_Dashboard/Rockies-Dash-Final.html)**  
 
