@@ -34,7 +34,9 @@ Batters Box Score
 
 OBP and BA  
 > Includes a chart showing the comparision of OBP (x-axis) to BA (y-axis).  
+
 > Each point represents a player, and hovering over the point gives exact details.  
+
 > This chart is used to show how higher OBP correlated to highter BA, and how the Rockies out performed the Blue Jays to secure their win.  
 
 ### Spraycharts  
@@ -64,6 +66,7 @@ There are two sub-sections in this section: *Hit Distance & Launch Speed* and *H
 Hit Distance v Launch Speed  
 
 > The charts show launch speed (x-axis) v the distance the ball traveled. Left shows 2019 season while right shows the TOR game. Each point can be hovered over to detail the pitch type and outcome during the game.  
+
 > The purpose of this report is to show how the relationship between the launch speed of a ball and interestingly how a lot of deep balls result in fly ball out if not hit with a high enough launch speed.  
 
 Hit Distance v Launch Angle  
