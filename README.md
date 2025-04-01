@@ -8,7 +8,7 @@ Code and Dashboard created by Cassy Miller
 
 ## [Dashboard](file:///C:/Users/cassy/OneDrive/Documents/DU/Junior%20Year/Spring%202020/Sports%20Amalytics/Rockies%20Project/Rockies-Dash-Final.html)  
 
-The R code for the dashboard can be found in "Rockies Final Report.rmd", and the html is stored in "Rockies-Final-Report.html".  
+The R code for the dashboard can be found in "Rockies Final Report.rmd", and the html is stored in "Rockies-Final-Report.html" in the docs folder.  
 
 **[View dashboard here](file:///C:/Users/cassy/OneDrive/Documents/DU/Junior%20Year/Spring%202020/Sports%20Amalytics/Rockies%20Project/Rockies-Dash-Final.html)**  
 
