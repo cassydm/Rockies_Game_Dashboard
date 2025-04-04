@@ -20,7 +20,7 @@ Data was scraped from [Baseball Reference](https://www.baseball-reference.com/).
 
 ## [Dashboard](https://cassydm.github.io/Rockies_Game_Dashboard/index.html) Overview  
 
-> This game details various statistics from the Colorado Rockies v Toronto Blue Jays game played 5/31/2019.  
+> This Dashboard details various statistics from the Colorado Rockies v Toronto Blue Jays game played 5/31/2019.  
 
 ### Basic Game Info
 
